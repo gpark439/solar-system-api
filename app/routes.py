@@ -20,9 +20,9 @@ planets = [
     Planet(8, "Neptune", "Most distant planet from the Sun", 14)
 ]
 
-planets_bp = Blueprint("planets", __name__)
+planets_bp = Blueprint("planets", __name__, url_prefix = "/planets")
 
-@planets_bp.route("/planets", methods=["GET"])
+@planets_bp.route("", methods=["GET"])
 def get_all_planets():
     response_body = []
     for planet in planets:
