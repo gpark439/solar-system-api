@@ -46,33 +46,30 @@ def get_all_planets():
 
 # Helper function to validate input for get_one_planet
 def get_planet_or_abort(planet_id):
-
     try:
         planet_id = int(planet_id)
-    except ValueError:
-        response = jsonify({"message": f"Planet id: {planet_id} is invalid. Planet id must be an integer."})
-        abort(make_response(response), 400)
+    except:
+        abort(make_response(jsonify({'msg': f"Invalid driver id: '{planet_id}'. ID must be an integer"}), 400))
 
-    chosen_planet = Planet.query.get(planet_id)
+    planet = Planet.query.get(planet_id)
 
-    if chosen_planet is None:
-        response = jsonify({"message": f"Planet with id: {planet_id} not found."})
-        abort(make_response(response), 404)
+    if planet is None:
+        abort(make_response(jsonify({"message": f"Planet with id: {planet_id} not found."}), 404))
 
-    return chosen_planet
+    return planet
 
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_one_planet(planet_id):
-    chosen_planet = get_planet_or_abort(planet_id)
+    planet = get_planet_or_abort(planet_id)
 
     return jsonify({
-                "id" : chosen_planet.id,
-                "name" : chosen_planet.name,
-                "description": chosen_planet.description,
-                "moons": chosen_planet.moons
+                "id" : planet.id,
+                "name" : planet.name,
+                "description": planet.description,
+                "moons": planet.moons
             }
-)
+), 200
 
 # Update one planet
 @planets_bp.route("/<planet_id>", methods=["PUT"])
